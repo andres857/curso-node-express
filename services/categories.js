@@ -15,6 +15,9 @@ class categoriesService {
             })
         }
     }
+    create(data){
+        
+    }
     find(){
         return this.categories
     }

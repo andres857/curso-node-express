@@ -18,7 +18,13 @@ class productsService{
         }
     }
 
-    create(){
+    create(data){
+        let newProduct = {
+            id: faker.datatype.uuid(),
+            ...data
+        }
+        this.products.push(newProduct)
+        return newProduct
     }
 
     find(){
@@ -30,10 +36,28 @@ class productsService{
         return product ? product : 'not found'
     }
 
-    update(){
+    update(id, changes){
+        let index = this.products.findIndex( product => product.id == id)
+        if(index === -1){
+            return ''
+        }else{
+            let product = this.products[index]
+            this.products[index] = {
+                ...product,
+                ...changes
+            }
+            return this.products[index]
+        }
     }
 
-    delete(){
+    delete(id){
+        let index = this.products.findIndex( product => product.id == id)
+        if(index === -1){
+            return 'item not Found'
+        }else{
+            this.products.splice(index,1)
+            return {id}
+        }
     }
 }
 

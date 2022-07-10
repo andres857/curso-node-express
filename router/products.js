@@ -23,23 +23,25 @@ router.get('/:id',(req,res)=>{
 })
 
 router.post('/',(req,res)=>{
-    let {size} = req.query
+    let body = req.body
+    let newProduct = service.create(body)
 
     res.status(201).json({
-        products
+        newProduct
     })
 })
 
 router.patch('/:idProduct',(req,res)=>{
     let {idProduct} = req.params
     const body = req.body
-    console.log(body);
-    
-    res.json({
-        message: 'created',
-        body,
-        idProduct
-    })
+    let product = service.update(idProduct, body)
+    res.json(product)
+})
+
+router.delete('/:id',(req,res)=>{
+    let {id} = req.params
+    let deleteProduct = service.delete(id)
+    res.json(deleteProduct)
 })
 
 module.exports = router
