@@ -1,33 +1,24 @@
 const express = require('express')
-const faker = require('faker')
+const usersService = require('../services/users')
 
 const router = express()
-let users = []
+const service = new usersService()
 
 router.get('/', (req,res)=>{
-    let {size} = req.query
-    let limit = size || 5
-
-    for (let i = 0; i < limit; i++) {
-        users.push({
-            id: faker.datatype.uuid(),
-            name: faker.name.findName(),
-            email:faker.internet.email(),
-            jobtitle: faker.name.jobTitle(),
-        })
-    }
-    res.json({
-        users
-    })
+    let users = service.find()
+    res.json({users})
 })
 
 router.get('/:id',(req,res)=>{
     let {id} = req.params
-    let user = users.find(user => user.id == id)
-    console.log(user);
-    res.json({
-        user
-    })
+    let user = service.findOne(id)
+    if(user){ 
+        res.status(200).json({user})
+    }else{
+        res.status(404).json({
+            message : 'user not found'
+        })
+    }
 })
 
 module.exports = router

@@ -1,30 +1,27 @@
+const e = require('express')
 const express = require('express')
-const faker = require('faker')
-
+const categoriesService = require('../services/categories')
 const router = express()
 
-const categories = []
+const service = new categoriesService()
 
 router.get('/', (req,res)=>{
-    let {size} = req.query
-    let limit = size || 5
-    for (let i = 0; i < limit; i++) {
-        categories.push({
-            name: faker.commerce.department(),
-            image: faker.image.imageUrl()
-        })
-    }
+    let category = service.find()
     res.json({
-        categories
+        category
     })
 })
 
 router.get('/:nameCategory',(req,res)=>{
     let {nameCategory} = req.params
-    let category = categories.find(categorie => categorie.name == nameCategory)
-    res.json({
-        category
-    })
+    let category = service.findOne(nameCategory)
+    if (category){
+        res.json({category})
+    }else{
+        res.status(404).json({
+            message: 'category not found'
+        })
+    }
 })
 
 module.exports = router
