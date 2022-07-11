@@ -9,16 +9,15 @@ router.get('/', async (req,res)=>{
     res.json( products )
 })
 
-router.get('/:id',async (req,res)=>{
-    let {id} = req.params
-    let product = await service.findOne(id)
-    if (product != 'not found'){
-        res.json({product})
-    }else{
-        res.status(404).json({ 
-            message: product
-        })
+router.get('/:id',async (req,res,next)=>{
+    try {
+        let {id} = req.params
+        let product = await service.findOne(id)
+        res.json(product)
+    } catch (err) {
+        next(err)
     }
+
 })
 
 router.post('/',async (req,res)=>{
@@ -43,10 +42,14 @@ router.patch('/:idProduct',async (req,res)=>{
     }
 })
 
-router.delete('/:id',async (req,res)=>{
-    let {id} = req.params
-    let deleteProduct = await service.delete(id)
-    res.json(deleteProduct)
+router.delete('/:id',async (req,res,next)=>{
+    try {
+        let {id} = req.params
+        let deleteProduct = await service.delete(id)
+        res.json(deleteProduct)
+    } catch (err) {
+        next(err)
+    }
 })
 
 module.exports = router
