@@ -1,5 +1,6 @@
 const boom = require('@hapi/boom')
 
+//middleware 
 function validatorHandler(schema,property){
     return function(req,res,next){
         const data = req[property]
@@ -7,7 +8,7 @@ function validatorHandler(schema,property){
         if(error){
             throw boom.badRequest(error.message)            
         }else{
-            next()
+            next() // continue to the next middleware
         }
     }
 }

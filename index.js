@@ -1,13 +1,13 @@
 const express = require('express')
 const routerApi = require('./router')
-const { logErrors, errorHandle,boomErrorHandle} = require('./middlewares/error.handler')
+const { errorHandle,boomErrorHandle} = require('./middlewares/error.handler')
 const app = express()
 
 const port = 4000
 
 app.use(express.json())
 routerApi(app)
-app.use(logErrors)
+//middlewares to handle errors
 app.use(boomErrorHandle)
 app.use(errorHandle)
 

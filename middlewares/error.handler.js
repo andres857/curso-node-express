@@ -1,9 +1,3 @@
-const logErrors = function (err,req,res,next){
-    console.log('logErrors');
-    // console.error(err)
-    next(err)
-}
-
 const errorHandle = function (err,req,res,next){
     console.log('errorHandle');
     res.status(401).json({
@@ -26,9 +20,7 @@ const boomErrorHandle = function (err,req,res,next){
     }
 }
 
-
 module.exports = {
-    logErrors,
     errorHandle,
     boomErrorHandle
 }

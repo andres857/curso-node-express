@@ -1,4 +1,5 @@
 const faker = require('faker')
+const boom = require('@hapi/boom')
 
 class usersService{
     constructor(){
@@ -18,13 +19,41 @@ class usersService{
         }
     }
 
+    create(data){
+        let newUser = {
+            id: faker.datatype.uuid(),
+            ...data
+        }
+        this.users.push(newUser)
+        return newUser
+    }
+
     find(){
         return this.users
     }
 
     findOne(id){
         let user = this.users.find(user => user.id == id)
-        return user ? user : ''
+        if(!user){
+            throw boom.notFound('User not Found')
+        }else{
+            return user
+        }
+    }
+
+    update(id,data){
+        let index = this.users.findIndex(user => user.id == id)
+        if(index === -1){
+            throw boom.notFound('User not Found')
+        }else{
+            let user = this.users[index]
+            this.users[index] = {
+                ...user,
+                ...data
+            }
+            return this.users[index]
+        }
+
     }
     
     delete(id){

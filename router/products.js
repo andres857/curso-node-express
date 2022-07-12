@@ -32,17 +32,18 @@ router.post('/',validatorHandler(createProductSchema,'body'),
         })
 })
 
-router.patch('/:idProduct',async (req,res)=>{
-    try {
-        let {idProduct} = req.params
-        const body = req.body
-        let product = await service.update(idProduct, body)
-        res.json(product)   
-    } catch (error) {
-        res.status(404).json({
-            message: error.message
-        })
-    }
+router.patch('/:id',
+    validatorHandler(getProductSchema,'params'),
+    validatorHandler(updateProductSchema, 'body'),
+    async (req,res,next)=>{
+        try {
+            let {id} = req.params
+            const body = req.body
+            let product = await service.update(id, body)
+            res.json(product)   
+        } catch (error) {
+            next(error)
+        }
 })
 
 router.delete('/:id',async (req,res,next)=>{
