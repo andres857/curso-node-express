@@ -6,9 +6,13 @@ const {getUserSchema,createUserSchema,updateUserSchema} = require('../schemas/us
 const router = express()
 const service = new usersService()
 
-router.get('/', (req,res)=>{
-    let users = service.find()
-    res.json({users})
+router.get('/', async (req,res,next)=>{
+    try {
+        let users = await service.find()
+        res.json(users)
+    } catch (error) {
+        next(error)
+    }
 })
 
 router.get('/:id',validatorHandler(getUserSchema,'params'),

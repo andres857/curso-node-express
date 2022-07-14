@@ -8,7 +8,7 @@ async function connectdb(){
         password: 'admin2020',
         database: 'my_store'
     })
-    await Client.connect()
+    await client.connect()
     return client
 }
 

@@ -1,6 +1,8 @@
 const faker = require('faker')
 const boom = require('@hapi/boom')
 
+const sequealize = require('../libs/sequialize')
+
 class productsService{
     constructor(){
         this.products = []
@@ -30,11 +32,15 @@ class productsService{
     }
 
     async find(){
-        return new Promise((resolve,reject)=>{
-            setTimeout(()=>{
-                resolve(this.products)
-            },1000)
-        })
+        try {
+            const query = 'SELECT * FROM tasks'
+            let [products] = await sequealize.query(query)
+            console.log(products);
+            return products
+        } catch (error) {
+            console.error(error.message)
+            throw boom.badGateway('Error en la consulta a la DB')
+        }
     }
 
     async findOne(id){

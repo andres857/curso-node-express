@@ -6,9 +6,13 @@ const router = express()
 
 const service = new productsService()
 
-router.get('/', async (req,res)=>{
-    let products = await service.find()
-    res.json( products )
+router.get('/', async (req,res,next)=>{
+    try {
+        let data = await service.find()
+        res.json( {data} )
+    } catch (error) {
+        next(error)
+    }
 })
 
 router.get('/:id', validatorHandler(getProductSchema, 'params'),

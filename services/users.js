@@ -1,63 +1,32 @@
-const faker = require('faker')
+const pool = require('../libs/postgress.pool')
 const boom = require('@hapi/boom')
 
 class usersService{
     constructor(){
-        this.users = []
-        this.generate()
+        this.pool = pool
+        this.pool.on('errot', e => console.log(e))
     }
 
-    generate(){
-        let limit = 5
-        for (let i = 0; i < limit; i++) {
-            this.users.push({
-                id: faker.datatype.uuid(),
-                name: faker.name.findName(),
-                email:faker.internet.email(),
-                jobtitle: faker.name.jobTitle(),
-            })
+    async create(data){
+        return data
+    }
+
+    async find(){
+        try {
+            let query = 'SELECT * FROM tasks'
+            let users = await this.pool.query(query)
+            return users.rows
+        } catch (error) {
+            console.error(error);
+            throw boom.badGateway('Error con la base de datos')
         }
     }
 
-    create(data){
-        let newUser = {
-            id: faker.datatype.uuid(),
-            ...data
-        }
-        this.users.push(newUser)
-        return newUser
+    async findOne(id){
+        return {id}
     }
 
-    find(){
-        return this.users
-    }
-
-    findOne(id){
-        let user = this.users.find(user => user.id == id)
-        if(!user){
-            throw boom.notFound('User not Found')
-        }else{
-            return user
-        }
-    }
-
-    update(id,data){
-        let index = this.users.findIndex(user => user.id == id)
-        if(index === -1){
-            throw boom.notFound('User not Found')
-        }else{
-            let user = this.users[index]
-            this.users[index] = {
-                ...user,
-                ...data
-            }
-            return this.users[index]
-        }
-
-    }
-    
-    delete(id){
-
+    async update(id,changes){
     }
 }
 
