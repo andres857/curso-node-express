@@ -16,10 +16,10 @@ router.get('/', async (req,res,next)=>{
 })
 
 router.get('/:id',validatorHandler(getUserSchema,'params'),
-    (req,res,next)=>{
+    async (req,res,next)=>{
         try {
             let {id} = req.params
-            let user = service.findOne(id)
+            let user = await service.findOne(id)
             res.status(200).json(user)   
         } catch (error) {
             next(error)
@@ -27,11 +27,11 @@ router.get('/:id',validatorHandler(getUserSchema,'params'),
 })
 
 router.post('/', validatorHandler(createUserSchema,'body'),
-    (req,res,next)=>{
+    async (req,res,next)=>{
         try {
             let body = req.body
-            let newUser = service.create(body)
-            res.status(201).json(newUser) 
+            let newUser = await service.create(body)
+            res.status(201).json({newUser}) 
         } catch (error) {
             next(error)
         }
@@ -39,11 +39,11 @@ router.post('/', validatorHandler(createUserSchema,'body'),
 
 router.patch('/:id',validatorHandler(getUserSchema,'params'),
     validatorHandler(updateUserSchema, 'body'),
-    (req,res,next)=>{
+    async (req,res,next)=>{
         try {
             let {id} = req.params
             let body = req.body
-            let userUpdated = service.update(id, body)
+            let userUpdated = await service.update(id, body)
             res.status(201).json(userUpdated)
         } catch (error) {
             next(error)

@@ -1,12 +1,15 @@
+const pool = require('../libs/postgress.pool')
 const faker = require('faker')
 const boom = require('@hapi/boom')
 
-const sequealize = require('../libs/sequialize')
+const { models } = require('./../libs/sequialize')
 
 class productsService{
     constructor(){
         this.products = []
         this.generate()
+        this.pool = pool
+        this.pool.on('error', e => console.log(e))
     }
 
     generate(){
@@ -33,9 +36,7 @@ class productsService{
 
     async find(){
         try {
-            const query = 'SELECT * FROM tasks'
-            let [products] = await sequealize.query(query)
-            console.log(products);
+            let products = await models.Product.findAll()
             return products
         } catch (error) {
             console.error(error.message)

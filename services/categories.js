@@ -1,10 +1,15 @@
 const faker = require('faker')
 const boom =require('@hapi/boom')
+const {models} = require('../libs/sequialize')
+const pool = require('../libs/postgress.pool')
+
 
 class categoriesService {
     constructor(){
         this.categories = []
         this.generator()
+        this.pool = pool
+        this.pool.on('error', e => console.log(e))
     }
 
     generator(){
@@ -25,8 +30,15 @@ class categoriesService {
         this.categories.push(newCategory)
         return newCategory
     }
-    find(){
-        return this.categories
+    async find(){
+        try {
+            let categories = await models.Category.findAll()
+            return categories
+        } catch (error) {
+            console.error(`[ Services - categories ${error}]`);
+            throw boom.badGateway(`Error en la consulta con la base de datos`)
+        }
+
     }
     findOne(id){
         let category = this.categories.find(category => category.id == id)

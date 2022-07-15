@@ -6,11 +6,13 @@ const router = express()
 
 const service = new categoriesService()
 
-router.get('/', (req,res)=>{
-    let category = service.find()
-    res.json({
-        category
-    })
+router.get('/', async (req,res,next)=>{
+    try {
+    let category = await service.find()
+        res.status(200).json({category})
+    } catch (error) {
+        next(error)
+    }
 })
 
 router.get('/:id',validatorHandler(getCategorySchema, 'params'),

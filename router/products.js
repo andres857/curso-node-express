@@ -8,8 +8,8 @@ const service = new productsService()
 
 router.get('/', async (req,res,next)=>{
     try {
-        let data = await service.find()
-        res.json( {data} )
+        let products = await service.find()
+        res.json( {products} )
     } catch (error) {
         next(error)
     }
