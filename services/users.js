@@ -31,23 +31,35 @@ class usersService{
 
     async findOne(id){
         let userFound = await models.User.findByPk(id)
-        if(!userFound){
-            throw boom.notFound('User not found')
-        }else{
-            return userFound
-        }
+            if(!userFound){
+                throw boom.notFound('user not found')
+            }else{
+                return userFound
+            }
     }
 
     async update(id,changes){
-        const user = await models.User.findByPk(id)
-        const changesFields = await user.update(changes)
-        return changesFields
+        try {
+            const user = this.findOne(id)
+            const changesFields = await user.update(changes)
+            return changesFields
+        } catch (error) {
+            console.error(`[ Services - users: function update error: \n ${error}]`)
+            throw boom.serverUnavailable('Error interno del servidor')
+        }
+
     }
 
     async delete(id){
-        const user = await models.User.findByPk(id)
-        const userDeleted = await user.destroy()
-        return userDeleted
+        try {
+            const user = await this.findOne(id)
+            const userDeleted = await user.destroy()
+            console.log(userDeleted);
+            return userDeleted            
+        } catch (error) {
+            console.error(error);
+            throw boom.badData('Error eliminando user')
+        }
     }
 }
 
