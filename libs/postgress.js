@@ -12,5 +12,4 @@ async function connectdb(){
     return client
 }
 
-
 module.exports = connectdb

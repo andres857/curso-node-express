@@ -47,7 +47,6 @@ class usersService{
             console.error(`[ Services - users: function update error: \n ${error}]`)
             throw boom.serverUnavailable('Error interno del servidor')
         }
-
     }
 
     async delete(id){
